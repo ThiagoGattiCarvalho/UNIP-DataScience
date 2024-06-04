@@ -9,7 +9,7 @@ st.image(logo, width = 400)
 st.title("Ciência de Dados e Estudos Analíticos de Big Data")
 st.subheader("Prof. Thiago Gatti")
 
-home1, home2, home3, home4, home5, home6, home7, home8 = st.tabs(['Programa', 'Avaliação', 'Professor', 'Notas', 'Avisos', 'Alunos: Motivação', 'Alunos: Sumário Executivo', 'Alunos: Quem Somos'])
+home1, home2, home3, home4, home5, home6, home7, home8 = st.tabs(['Programa', 'Professor', 'Avaliação', 'Notas', 'Avisos', 'Alunos: Motivação', 'Alunos: Sumário Executivo', 'Alunos: Quem Somos'])
 
 with home1:
     st.subheader("Programa")
@@ -54,6 +54,20 @@ with home1:
     st.markdown("#### Aula8: TBD")
 
     st.markdown("#### Aula9: TBD")
+
+
+with home2:
+    image_thiago = Image.open("Thiago.png") 
+    st.image(image_thiago, width = 250)
+    st.title("Thiago Gatti")
+    st.subheader("Supply Chain Management & Data Science")
+    st.markdown("""
+    \nProfissional orientado a resultados, com bom trânsito entre áreas e histórico comprovado de aumento de ROI em diversos setores.
+    \nReconhecido pela facilidade de transitar entre tecnologia e business e pelo expertise em Planejamento Integrado de Negócios (IBP) (ou S&OP avançado), unindo fortemente Supply Chain, Vendas e Finanças, e aplicando Ciência de Dados e Inteligência Artificial para otimizar a tomada de decisão e torná-la data-driven. 
+    \nHábil em combinar visão estratégica com solução prática de problemas e liderança para impulsionar a inovação e elevar a gestão em organizações voltadas para o futuro.
+    \nhttps://www.linkedin.com/in/thiagocscp/
+    """)
+
 
 
 with home6:
