@@ -20,7 +20,7 @@ try:                                                                            
 except:                                                                             # Caso contrário ignore.
     pass
 
-ingestion1, ingestion2 = st.tabs(['Ingestão de Dados', 'EDA - Análise Exploratória de Dados'])  # 2 guias.
+ingestion1, ingestion2 = st.tabs(['Ingestão de Dados', 'EDA - Análise Exploratória de Dados - Antes'])  # 2 guias.
 
 with ingestion1:
     st.subheader("Ingestão de Dados")
@@ -36,8 +36,9 @@ with ingestion1:
         conn = sqlite3.connect('unip_data_science.sqlite')                          # Salve em sqlite.
         df.to_sql('df', conn, if_exists='replace', index=False)
         conn.close()
+        del df, df_upload, conn                                                     # Limpe a memória para agilizar o app.
 
-        st.title("Press F5!")                                                       # Atualize o cache.
+        st.title("Pressione F5!")                                                   # Atualize o cache.
 
     try:                                                                            # Mostre o que existe.
         st.write(f"""##### Dataframe {df.shape})""")                                # .shape mostra quantas linhas e colunas.
@@ -47,13 +48,12 @@ with ingestion1:
 
 
 with ingestion2:
-    st.subheader("EDA - Análise Exploratória de Dados")
+    st.subheader("EDA - Análise Exploratória de Dados - Antes")
 
     report = sv.analyze(df)                                                         # Use o Sweetviz para gerar o relatório.
-    report_html = "eda.html"
-    report.show_html("eda.html", open_browser=False)                                # Salve o .html no diretório local.
+    report.show_html("eda_antes.html", open_browser=False)                                # Salve o .html no diretório local.
 
-    with open(report_html, "r") as f:                                               # Leia "r" o .html do diretório local.
+    with open("eda_antes.html", "r") as f:                                                # Leia "r" o .html do diretório local.
         html_content = f.read()
 
     components.html(html_content, height=800, scrolling=True)                       # Mostre o .html no Streamlit.
