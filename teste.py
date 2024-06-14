@@ -1,27 +1,53 @@
-import numpy as np
-import matplotlib.pyplot as plt
-from scipy.stats import f_oneway
+import pandas as pd
+from imblearn.pipeline import Pipeline
+from imblearn.over_sampling import SMOTE
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import OneHotEncoder, MinMaxScaler
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.model_selection import train_test_split
 
-# Generate sample data for three groups
-np.random.seed(0)
-group1 = np.random.normal(loc=10, scale=1, size=30)
-group2 = np.random.normal(loc=12, scale=1, size=30)
-group3 = np.random.normal(loc=11, scale=1, size=30)
+data = pd.DataFrame({
+    'feature1': [1, 2, 3, 4, 5, 6],
+    'feature2': ['A', 'B', 'A', 'B', 'A', 'B'],
+    'feature3': ['X', 'Y', 'X', 'Y', 'X', 'Y'],
+    'target': [0, 0, 0, 0, 1, 1]
+})
 
-# Perform ANOVA test
-f_statistic, p_value = f_oneway(group1, group2, group3)
+X = data[['feature1', 'feature2', 'feature3']]
+y = data['target']
 
-# Print ANOVA results
-print("ANOVA F-statistic:", f_statistic)
-print("ANOVA p-value:", p_value)
+categorical_features = ['feature2', 'feature3']
+numerical_features = ['feature1']
 
-# Plot ANOVA chart
-plt.figure(figsize=(8, 6))
-plt.boxplot([group1, group2, group3], labels=['Group 1', 'Group 2', 'Group 3'])
-plt.title('ANOVA Chart')
-plt.xlabel('Groups')
-plt.ylabel('Values')
-plt.grid(axis='y')
-plt.show()
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', 'passthrough', numerical_features),
+        ('cat', OneHotEncoder(), categorical_features)
+    ])
 
+pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('smote', SMOTE()),
+    ('scaler', MinMaxScaler()),
+    ('classifier', RandomForestClassifier())
+])
 
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+pipeline.fit(X_train, y_train)
+
+predictions = pipeline.predict(X_test)
+
+print(predictions)
+
+# Assuming you have another DataFrame with similar columns
+new_data = pd.DataFrame({
+    'feature1': [7, 8, 9],
+    'feature2': ['A', 'B', 'A'],
+    'feature3': ['X', 'Y', 'X']
+})
+
+# Make predictions on the new data
+new_predictions = pipeline.predict(new_data)
+
+print(new_predictions)
