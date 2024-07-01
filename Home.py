@@ -9,67 +9,64 @@ st.image(logo, width = 400)
 st.title("Ciência de Dados na Prática")
 st.subheader("Prof. Thiago Gatti")
 
-home1, home2, home3, home4, home5 = st.tabs(['Programa', 'Professor', 'Alunos: Motivação', 'Alunos: Sumário Executivo', 'Alunos: Quem Somos'])
+home1, home2 = st.tabs(['Programa', 'Professor'])
 
 with home1:
-    st.subheader("Objetivo")
+    st.subheader("Objetivos")
     st.markdown("""
-        \nO curso tem cinco objetivos:
-        \n1) Motivar o aluno mostrando que é fácil criar um aplicativo na nuvem, igual a este, para se auto-promover.
-        \n2) Reforçar o aprendizado aplicando conceitos de Gamification, mostrando visualmente, em tempo real, o que acontece a cada etapa do processo.
-        \n3) Melhorar negócio e carreira, com análises corretas e tomadas de decisão práticas e assertivas, sob orientação de um profissional com mais de vinte anos de experiência em consultoria.
-        \n4) Aprimorar a comunicação, trabalhando linguagem de negócios para elevar a eficiência do participante em projetos multi-departamentais dentro da empresa.
-        \n5) Aproximar a universidade da empresa, com o chancelamento dos projetos dos alunos, claramente otimizando os negócios com cases e ferramentas práticas.
+        \n1) Motivar o aluno mostrando que é fácil criar aplicativos na nuvem.
+        \n2) Comparar Python, KNIME e Power BI ao longo de um projeto de Ciência de Dados.
+        \n3) Pró-atividade, convertendo conhecimento em aplicações tangíveis.
+        \n4) Aplicar conceitos de Gamification, com a visualização em tempo real das reações da Inteligência Artificial.
+        \n5) Foco em negócio, criando motores de recomendação indicando decisões úteis, objetivas, práticas, assertivas e estratégicas.
+        \n6) Melhorar a comunicação, trabalhando comportamento e incentivando a participação em projetos multi-departamentais dentro da empresa.
+        \n7) Aproximar a universidade do mercado, com o chancelamento dos projetos que proporcionam melhoria efetiva nos resultados.
     """)
 
-    st.subheader("Medição de Desempenho")
+    st.subheader("Avaliação")
     st.markdown("""
         \nO desempenho em aula será medido através de três pilares:
-        \nA) Participação: Entregando semanalmente o que for pedido, agregando comentários construtivos durante os fórums de discussão e gerando tráfego para os colegas e intituições.
-        \nB) Aplicativo de Ciência de Dados: Efetivamente criando e hospedando um aplicativo com as funções ensinadas em aula.
-        \nC) Business Case com: 
-                \n- Data Story Telling, contando a história do que acontace na empresa através de dados,
+        \nA) Participação: Entregando o que for pedido, sendo pontual, fazendo comentários construtivos, apresentando inovações e gerando tráfego para colegas e intituições.
+        \nB) Domínio de uma tecnologia: Usando as opções No-Code e/ou criando e hospedando um aplicativo em Python com o que for ensinado em aula.
+        \nC) Business Case (.pdf ou .pptx) com: 
+                \n- Data Story Telling, contando a história do que acontace na empresa através de dados e gráficos,
                 \n- Analytics, indo desde o descritivo até o prescritivo, passando por diagnóstico e previsões, 
-                \n- Decision Automation, indicando tomadas de decisão otimizadas, geradas automaticamente, que possibilitam
-                    fazer o planejamento estratégico,                   
-                    monitorar o negócio e ajustar os planos em tempo real,
-                    definir metas de executiivos,
-                    detectar fraudes,
-                    realizar a gestão por exceção e mais.
-        \nOs cases aprovados serão chancelados para serem entregues ao um diretor da área de negócios da empresa.
-""")
+                \n- Decision Automation, indicando tomadas de decisão otimizadas, estratégicas, geradas automaticamente. 
+        \nOs cases aprovados serão chancelados para serem entregues a um diretor da área de negócios da empresa.
+    """)
 
     st.subheader("Recursos")
     st.markdown("""
-        \nO conteúdo do curso é desenvolvido usando código open-source, com Python e suas bibliotecas.
-        As aulas terão atividades em grupo, uso de internet e desenvolvimento de código (fácil).
-        \nOs alunos também aprendem um modelo Junguiano de perfil comportamental e, em seguida, são incentivados a aplicar o modelo compartilhando e comentando os trabalhos dos colegas
-        para aprimorar as suas habilidades de comunicação e para construir rapport, contribuindo para seu crescimento pessoal e profissional.
+        \nO curso é desenvolvido com ferramentas gratuitas, como Python, KNIME e Power BI.
+        Os alunos que preferirem não programar podem usar o KNIME, e os que desejarem maior autonomia usam o Python. Todos usarão o Power BI.   
+        As aula terão discussões e atividades em em grupo e os alunos aprenderão a utilizar um modelo comportamental 
+        para aprimorar seus aplicativos e códigos, e suas habilidades de comunicação, fomentando crescimento pessoal e profissional.
     """)
 
     st.subheader("Perguntas que você será capaz de responder ao término do curso")
     st.markdown("""
         \nAo longo do curso, a cada pequeno passo, você será capaz de responder a perguntas muito comuns nas empresas, como:
-        \nI) Qual é o preço que maximiza lucro?
-        \nII) Qual é a previsão estatística de vendas com precisão acima de 95%?
-        \nIII) Qual deve ser o estoque de segurança estatístico que garante 90% de nível de serviço?
-        \nIV) Como calcular e otimizar o ROI?
-        \nV) Como fazer planejamento estratégico simulando cenários?
-        \nVI) Como definir metas de executivos?
+        \nI) Como demonstrar e maximizar ROI?
+        \nII) Como definir metas de executivos?
+        \nIII) Como fazer planejamento estratégico simulando cenários?
+        \nIV) Qual é o preço que maximiza lucro?
+        \nV) Qual é a previsão estatística de vendas com precisão acima de 95%?
+        \nVI) Qual deve ser o estoque de segurança estatístico que garante 90% de nível de serviço?
         \nAgora troque as palavras: vendas, estoque, preço, ROI, etc. por quaisquer outras colunas dentro da sua base de dados e você terá uma idéia do poder que você tem nas mãos.
     """)
 
     st.subheader("Conteúdo")
 
     st.markdown("#### Módulo 1: Palestra: O Robô no Divã: Como Comportamento Afeta a IA")
-    st.markdown("""Os alunos aprendem a associar comportamento à Ciência de Dados para aprimorar seus códigos e aumentar suas chances de promoção na empresa.
-                Além disso, será criada a base para as discussões ao longo do curso.""", unsafe_allow_html=True)
+    st.markdown("""Os alunos aprendem a associar comportamento à Ciência de Dados para aprimorar seus aplicativos.
+                Além disso, será criada a base para as discussões ao longo do curso.""")
 
-    st.markdown("#### Módulo 2: Interface de usuário")
-    st.markdown("""O programa de aulas será apresentado e a infra-estrutura necessária ao uso do Python será montada, bem como a interface com o usuário.
-                 O código será feito com Visual Studio Code (ao invés de Jupyter) e os alunos ganham auto-confiança ao gerar rapidamente um aplicativo em Streamlit.""")
+    st.markdown("#### Módulo 2: Setup e Interface de Usuário")
+    st.markdown("""O programa de aulas será apresentado e a infra-estrutura necessária será estabelecida.
+                Serão instalados o KNIME, Power BI e Python com as suas bibliotecas e Visual Studio Code.
+                Os alunos ganham auto-confiança ao gerarem aplicativos em múltiplas plataformas rapidamente.""")
 
-    st.markdown("#### Módulo 3: Deployment, Banco de Dados e Análise Exploratória")
+    st.markdown("#### Módulo 3: Análise Exploratória de Dados e Deployment")
     st.markdown("""Os alunos fazem o deployment do app na nuvem com o GitHub, ingerem os dados com Pandas, armazenam em SQLite3 e analisam com o Sweetviz.""")
     st.markdown("""O app vai para a internet e os estudantes passam a promovê-lo, atraindo tráfego e aumentando sua competitividade no mercado de trabalho.""")
 
@@ -90,7 +87,7 @@ with home1:
     st.markdown("""Os alunos aprendem os conceitos básicos de Inteligência Artificial, seus tipos, as diferenças entre os modelos, simulação de cenários e a criação de Pipelines.""")
     st.markdown("""Eles também aprendem a avaliar o output dos modelos de aprendizado de máquina para realizar ajustes e reiniciar o loop desde a preparação e a encomenda de dados com Scikit-Learn e Imbalanced-Learn.""")
 
-    st.markdown("#### Módulo 8: Planejamento Estratégico e Finanças")  # cross-validation? comparacao de modelos? simulação de cenários?
+    st.markdown("#### Módulo 8: Produção")  # Planejamento Estratégico e Finanças cross-validation? comparacao de modelos? simulação de cenários?
 
     st.markdown("#### Módulo 9: Analytics") # imbalanced-learn # shap # gestão por exceção
 
@@ -111,32 +108,32 @@ with home2:
 
 
 
-with home3:
-    st.subheader("Alunos: Motivação")
-    st.markdown("""
-    \nDecidimos fazer este projeto por ...
-    """)
+# with home3:
+#     st.subheader("Alunos: Motivação")
+#     st.markdown("""
+#     \nDecidimos fazer este projeto por ...
+#     """)
 
-with home4:
-    st.subheader("Alunos: Sumário Executivo")
-    st.markdown("""
-    \nO projeto ...
-    """)
+# with home4:
+#     st.subheader("Alunos: Sumário Executivo")
+#     st.markdown("""
+#     \nO projeto ...
+#     """)
 
-with home5:
-    st.subheader("Alunos: Quem Somos")
+# with home5:
+#     st.subheader("Alunos: Quem Somos")
     
-    home8_1, home8_2 = st.columns(2)
-    with home8_1:
-        st.image(Image.open("homem.png"), width = 200)
-        st.markdown("""
-            José
-            \nlinkedin...
-            \nFormado em...""")
+#     home8_1, home8_2 = st.columns(2)
+#     with home8_1:
+#         st.image(Image.open("homem.png"), width = 200)
+#         st.markdown("""
+#             José
+#             \nlinkedin...
+#             \nFormado em...""")
 
-    with home8_2:
-        st.image(Image.open("mulher.png"), width = 200)
-        st.markdown("""
-            Maria
-            \nlinkedin...
-            \nFormada em...""")
+#     with home8_2:
+#         st.image(Image.open("mulher.png"), width = 200)
+#         st.markdown("""
+#             Maria
+#             \nlinkedin...
+#             \nFormada em...""")
