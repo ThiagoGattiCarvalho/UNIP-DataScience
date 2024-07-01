@@ -298,14 +298,23 @@ with preprocessing8:
     preprocessing8_1, preprocessing8_2, preprocessing8_3, preprocessing8_4 = st.columns(4)
 
     with preprocessing8_1:
-        eixo_x = st.selectbox('Eixo x:', colunas_numericas_modificadas, index=8)
+        try:
+            eixo_x = st.selectbox('Eixo x:', colunas_numericas_modificadas, index=8)
+        except:
+            eixo_x = st.selectbox('Eixo x:', colunas_numericas_modificadas)
 
     with preprocessing8_2:
-        eixo_y = st.selectbox('Eixo y (MAXIMIZAR):', colunas_numericas_modificadas, index=5)        
+        try:
+            eixo_y = st.selectbox('Eixo y (MAXIMIZAR):', colunas_numericas_modificadas, index=5)        
+        except:
+            eixo_y = st.selectbox('Eixo y (MAXIMIZAR):', colunas_numericas_modificadas)        
 
     with preprocessing8_3:
-        cor = st.selectbox('Cor:', list(df2.columns), index=2)                                    # Fica como opção escolher a cor aqui ou na sidebar.
-
+        try:
+            cor = st.selectbox('Cor:', list(df2.columns), index=2)                                    # Fica como opção escolher a cor aqui ou na sidebar.
+        except:
+            cor = st.selectbox('Cor:', list(df2.columns), index=2)
+            
     with preprocessing8_4:
         grid = st.button('Gerar grid')                
 
