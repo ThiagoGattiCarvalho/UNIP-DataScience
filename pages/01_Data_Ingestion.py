@@ -10,7 +10,7 @@ from PIL import Image
 logo = Image.open("logo.png") 
 st.image(logo, width = 400)
 
-st.title("Ciência de Dados e Estudos Analíticos de Big Data")
+st.title("Ciência de Dados na Prática")
 st.subheader("Prof. Thiago Gatti")
 
 try:                                                                                # Se existir uma base de dados em sql carrege.
@@ -20,7 +20,7 @@ try:                                                                            
 except:                                                                             # Caso contrário ignore.
     pass
 
-ingestion1, ingestion2 = st.tabs(['Ingestão de Dados', 'EDA - Análise Exploratória de Dados - Antes'])  # 2 guias.
+ingestion1, ingestion2, ingestion3 = st.tabs(['Ingestão de Dados', 'EDA - Análise Exploratória de Dados - Antes', 'Sumário Estatístico'])  # 2 guias.
 
 with ingestion1:
     st.subheader("Ingestão de Dados")
@@ -57,3 +57,13 @@ with ingestion2:
         html_content = f.read()
 
     components.html(html_content, height=800, scrolling=True)                       # Mostre o .html no Streamlit.
+
+
+with ingestion3:
+    st.subheader("Sumário Estatístico")
+    st.write(df.describe())
+
+    st.subheader("Valores Faltantes")
+    st.write(df.isnull().sum())
+
+

@@ -16,7 +16,7 @@ from PIL import Image
 logo = Image.open("logo.png") 
 st.image(logo, width = 400)
 
-st.title("Ciência de Dados e Estudos Analíticos de Big Data")
+st.title("Ciência de Dados na Prática")
 st.subheader("Prof. Thiago Gatti")
 
 with st.sidebar:
@@ -34,22 +34,26 @@ with st.sidebar:
     colunas_numericas = sorted(list(df.select_dtypes(include=['number']).columns))      # Separe as colunas numéricas das categoricas para facilitar depois.
     colunas_categoricas = sorted(list(df.select_dtypes(include=['object']).columns))
 
-    coluna = st.selectbox('Analisar:', colunas_numericas)
-    eixo_x = st.selectbox('por Grupo:', list(df.columns))
+    coluna = st.selectbox('Analisar:', colunas_numericas, index=8)
+    eixo_x = st.selectbox('por:', list(df.columns), index=3)
+    item = st.selectbox('Escolher:', pd.unique(df[eixo_x]))
+
+    filtered_df2 = df[df[eixo_x] == item]
+    filtered_df = filtered_df2.dropna()
+    del filtered_df2
 
 
-statistics1, statistics2, statistics3, statistics4, statistics5, statistics6 = st.tabs(['Distribuição', 'Probabilidade', 'Segurança e Sobrevivência', 'ANOVA', 'Correlação', 'Potência'])
+statistics1, statistics2, statistics3, statistics4, statistics5, statistics6 = st.tabs(['Distribuição', 'Probabilidade', 'Risco, Segurança e Sobrevivência', 'ANOVA', 'Correlação', 'Potência'])
 
 
 with statistics1:
     st.subheader("Distribuição")
 
-    st.markdown(f'Qual é a diferença entre a distribuição discreta e contínua para {coluna}?')
+    st.markdown(f'Qual é a diferença entre a distribuição discreta e contínua para {item}?')
 
-    df = df.dropna()
 
     fig1 = plt.figure(figsize=(5, 3))
-    sns.histplot(data=df,                                                           # Esse gráfico será um histograma com os dados da coluna escolhida.
+    sns.histplot(data=filtered_df,                                                           # Esse gráfico será um histograma com os dados da coluna escolhida.
                 x=coluna,
                 bins=10,                                                            # Segmentado em 10 barras.
                 kde=True,                                                           # Transforme discreto em contínuo através de uma função.
@@ -76,8 +80,8 @@ with statistics2:
     with statistics2_2:
         max_valor = st.number_input("Valor Máximo:", value=0.0)
 
-    kde = gaussian_kde(df[coluna])                                                  # Use o KDE do gaussian_kde para criar a função contínua usando os dados da coluna selecionada.
-    x_values = np.linspace(df[coluna].min(), df[coluna].max(), 100)                 # Crie só 100 valores aleatórios entre o min e o max estabelecidos para reduzir processamento.
+    kde = gaussian_kde(filtered_df[coluna])                                                  # Use o KDE do gaussian_kde para criar a função contínua usando os dados da coluna selecionada.
+    x_values = np.linspace(filtered_df[coluna].min(), filtered_df[coluna].max(), 100)                 # Crie só 100 valores aleatórios entre o min e o max estabelecidos para reduzir processamento.
     pdf_values = kde(x_values)                                                      # Aplique a KDE sobre os dados gerados para imitar a distribuição real.
     interval_mask = (x_values >= min_valor) & (x_values <= max_valor)
     pdf = np.sum(pdf_values[interval_mask]) / np.sum(pdf_values)
@@ -89,15 +93,12 @@ with statistics2:
     # cdf = cdf_values[max_index] - cdf_values[min_index]
 
     # Para calcular a CDF acumulada até o maior valor escolhido. Usar esta para calcular valores de segurança.
-    ecdf = ECDF(df[coluna].values)
+    ecdf = ECDF(filtered_df[coluna].values)
     cdf = ecdf(max_valor)
-
 
     statistics2_coluna1, statistics2_coluna2 = st.columns(2)
 
     with statistics2_coluna1:
-
-        st.markdown(f'Qual é a probabilidade (Intervalo de Confiança) de {coluna} estar entre {min_valor} e {max_valor} inclusive?')
 
         fig2 = plt.figure(figsize=(4, 3))
         sns.lineplot(x=x_values,                                                    # Esse gráfico será um histograma com os dados da coluna escolhida.
@@ -112,27 +113,18 @@ with statistics2:
         plt.ylabel('PDF - Densidade de Probabilidade')  
         st.pyplot(fig2, use_container_width=True, clear_figure=False)               # Mostre a figura no Streamlit.
 
-        st.markdown(f'A probabilidade (Intervalo de Confiança) de {coluna} estar entre {min_valor} e {max_valor} inclusive é {pdf:.2f}.')
-
-
         st.set_option('deprecation.showPyplotGlobalUse', False)
-        fitter = Fitter(df[coluna], distributions=get_common_distributions())
+        fitter = Fitter(filtered_df[coluna], distributions=get_common_distributions())
         fitter.fit()
         fitter.plot_pdf()
         plt.title('Inferência Estatística')
         st.pyplot(use_container_width=True, clear_figure=False)                   # Mostre a figura no Streamlit.
-        
-        st.write("Summary of best fits:")
-        st.write(fitter.summary())
-
 
 
     with statistics2_coluna2:
 
-        st.markdown(f'Qual é a probabilidade (Intervalo de Confiança) para {coluna} ser menor ou igual a {max_valor}?')
-
         fig3 = plt.figure(figsize=(4, 3))
-        sns.ecdfplot(data=df,                                                       # Esse gráfico será um histograma com os dados da coluna escolhida.
+        sns.ecdfplot(data=filtered_df,                                                       # Esse gráfico será um histograma com os dados da coluna escolhida.
                     x=coluna,
                     label='CDF',
                     )             
@@ -141,78 +133,100 @@ with statistics2:
         titulo = f'CDF={cdf:.2f}'
         plt.title(titulo)
         plt.xlabel(coluna)
-        plt.ylabel('CDF - Acúmulo de Probabilidade')    
+        plt.ylabel('Probabilidade Acumulada (CDF)')    
         plt.fill_between(ecdf.x, 0, ecdf.y, where=(ecdf.x <= max_valor), color='lightblue')
         plt.legend()
         st.pyplot(fig3, use_container_width=True, clear_figure=False)               # Mostre a figura no Streamlit.
 
-        st.markdown(f'A probabilidade de {coluna} ser menor ou igual a {max_valor} é de {cdf:.2f} (Intervalo de Confiança).')
+        st.markdown(f'Qual é a probabilidade (Intervalo de Confiança) de {coluna} estar entre {min_valor} e {max_valor} inclusive? R: {pdf:.2f}.')
+        st.markdown(f'Qual é a probabilidade (Intervalo de Confiança) para {coluna} ser menor ou igual a {max_valor}? R: {cdf:.2f}.')
 
+    st.write("Summary of best fits:")
+    st.write(fitter.summary())
 
 
 with statistics3:
-    st.subheader("Segurança e Sobrevivência")
+    st.subheader("Risco, Segurança e Sobrevivência")
 
     statistics3_1, statistics3_2, statistics3_3, statistics3_4 = st.columns(4)
 
     with statistics3_1:
         ic = st.slider('Intervalo de Confiança da CDF:', min_value=0.0, max_value=1.0, value=0.8, step=0.01)
 
-    # mediana = np.median(df[coluna])
-    # mad = median_abs_deviation(df[coluna])
-    # z_robusto = (df[coluna] - mediana) / mad
+    # mediana = np.median(filtered_df[coluna])
+    # mad = median_abs_deviation(filtered_df[coluna])
+    # z_robusto = (filtered_df[coluna] - mediana) / mad
     # x = z_robusto * mad + mediana
 
-    values, counts = np.unique(df[coluna], return_counts=True)
-    probabilities = counts / len(df[coluna])
-    inverse_cdf = rv_discrete(values=(values, probabilities)).ppf(ic)
-    inverse_cdf = np.round(inverse_cdf, 2)
+    values, counts = np.unique(filtered_df[coluna], return_counts=True)
+    probabilities = counts / len(filtered_df[coluna])
+        
+    safety_inverse_cdf = rv_discrete(values=(values, probabilities)).ppf(ic)               # Segurança        
+    safety_inverse_cdf = np.round(safety_inverse_cdf, 2)                                  
+    survival_inverse_cdf = rv_discrete(values=(values, probabilities)).ppf(1 - ic)       # Sobrevivência
+    survival_inverse_cdf = np.round(survival_inverse_cdf, 2)
 
-    statistics3_coluna1, statistics3_coluna2 = st.columns(2)
+    df_sorted = filtered_df.sort_values(by=coluna)
+    values_sorted = df_sorted[coluna].values
+    unique_values, unique_counts = np.unique(values_sorted, return_counts=True)
+    cumulative_counts = np.cumsum(unique_counts)
+    survival_function = 1 - (cumulative_counts / len(df_sorted))
+    hazard_function = unique_counts / (len(df_sorted) - cumulative_counts + unique_counts)
+    cumulative_hazard_function = np.cumsum(hazard_function)
+    x_value_at_08_survival = unique_values[np.argmin(np.abs(survival_function - 0.8))]
 
-    with statistics3_coluna1:
+    fig4, axes = plt.subplots(nrows=2, ncols=2, figsize=(8, 5))
 
-        st.markdown(f'Qual é o(a) {coluna} máximo que garante {ic} de segurança (Intervalo de Confiança)?')
+    sns.ecdfplot(data=filtered_df, x=coluna, ax=axes[0, 0])             
+    axes[0, 0].set_ylim(0)
+    titulo = f'Segurança = {ic:.2f}'
+    axes[0, 0].set_title(titulo)
+    axes[0, 0].set_xlabel(coluna)
+    axes[0, 0].set_ylabel('Probabilidade Acumulada (CDF)')    
+    axes[0, 0].fill_between(ecdf.x, 0, ecdf.y, where=(ecdf.x <= safety_inverse_cdf), color='lightblue')
+    label = f'{coluna} = {safety_inverse_cdf}'
+    axes[0, 0].axvline(safety_inverse_cdf, label=label, color='r', linestyle='--')
+    axes[0, 0].legend()
 
-        fig4 = plt.figure(figsize=(4, 3))
-        sns.ecdfplot(data=df, x=coluna)             
-        plt.ylim(0)
-        # plt.xlim(0)
-        titulo = f'Segurança = CDF = {ic:.2f}'
-        plt.title(titulo)
-        plt.xlabel(coluna)
-        plt.ylabel('CDF - Acúmulo de Probabilidade')    
-        plt.fill_between(ecdf.x, 0, ecdf.y, where=(ecdf.x <= inverse_cdf), color='lightblue')
-        label = f'{coluna} = {inverse_cdf}'
-        plt.axvline(inverse_cdf, label=label, color='r', linestyle='--')
-        plt.legend()
-        st.pyplot(fig4, use_container_width=True, clear_figure=False)               # Mostre a figura no Streamlit.
+    sns.ecdfplot(data=filtered_df, x=coluna, ax=axes[0, 1])             
+    axes[0, 1].set_ylim(0)
+    titulo = f'Sobrevivência = {ic:.2f}'
+    axes[0, 1].set_title(titulo)
+    axes[0, 1].set_xlabel(coluna)
+    axes[0, 1].set_ylabel('Probabilidade Acumulada (CDF)')    
+    axes[0, 1].fill_between(ecdf.x, 0, ecdf.y, where=(ecdf.x >= survival_inverse_cdf), color='lightblue')
+    label = f'{coluna} = {survival_inverse_cdf}'
+    axes[0, 1].axvline(survival_inverse_cdf, label=label, color='r', linestyle='--')
+    axes[0, 1].legend()
 
-        st.markdown(f'O(a) {coluna} máximo que garante {ic} segurança (Intervalo de Confiança) é {inverse_cdf}.')
+    sns.lineplot(x=unique_values, y=hazard_function, drawstyle='steps-post', ax=axes[1, 0])
+    axes[1, 0].set_ylim(0)
+    titulo = 'Função Risco Instantâneo'
+    axes[1, 0].set_title(titulo)
+    axes[1, 0].set_xlabel(coluna)
+    axes[1, 0].set_ylabel('Risco (de não sobreviver)')
+
+    sns.lineplot(x=unique_values, y=survival_function, drawstyle='steps-post', ax=axes[1, 1])
+    axes[1, 1].set_ylim(0)
+    titulo = 'Função Sobrevivência'
+    axes[1, 1].set_title(titulo)
+    axes[1, 1].set_xlabel(coluna)
+    axes[1, 1].set_ylabel('Probabilidade de Sobrevivência')
+    axes[1, 1].fill_between(unique_values, 0.8, 1, color='lightblue')
+    label = f'{coluna} 80% Sobrevivência = {x_value_at_08_survival}'
+    axes[1, 1].axhline(0.8, label=label, color='r', linestyle='--')
+    axes[1, 1].legend()
+
+    plt.tight_layout()
+        
+    st.pyplot(fig4, use_container_width=True, clear_figure=False)
+
+    st.markdown(f'Qual é {coluna} máximo com {ic} segurança (Intervalo de Confiança)? R: {safety_inverse_cdf}.')
+    st.markdown(f'Qual é {coluna} mínimo que garante a sobrevivência com {ic} de certeza (Intervalo de Confiança)? R: {survival_inverse_cdf}.')
+    st.markdown(f'Qual é {coluna} que garante 80% Sobrevivência? R: {x_value_at_08_survival}.')
 
 
-    with statistics3_coluna2:
 
-        st.markdown(f'Qual é o(a) {coluna} mínimo que garante a sobrevivência com {ic} de certeza (Intervalo de Confiança)?')
-
-        inverse_cdf = rv_discrete(values=(values, probabilities)).ppf(1 - ic)
-        inverse_cdf = np.round(inverse_cdf, 2)
-
-        fig5 = plt.figure(figsize=(4, 3))
-        sns.ecdfplot(data=df, x=coluna)             
-        plt.ylim(0)
-        # plt.xlim(0)
-        titulo = f'Sobrevivência = 1 - CDF = {ic:.2f}'
-        plt.title(titulo)
-        plt.xlabel(coluna)
-        plt.ylabel('CDF - Acúmulo de Probabilidade')    
-        plt.fill_between(ecdf.x, 0, ecdf.y, where=(ecdf.x >= inverse_cdf), color='lightblue')
-        label = f'{coluna} = {inverse_cdf}'
-        plt.axvline(inverse_cdf, label=label, color='r', linestyle='--')
-        plt.legend()
-        st.pyplot(fig5, use_container_width=True, clear_figure=False)               # Mostre a figura no Streamlit.
-
-        st.markdown(f'O(a) {coluna} mínimo que garante a sobrevivência com {ic} de certeza (Intervalo de Confiança) é {inverse_cdf}.')
 
 
 
@@ -222,13 +236,10 @@ with statistics4:
     statistics4_1, statistics4_2, statistics4_3, statistics4_4 = st.columns(4)
 
     with statistics4_1:
-        cor = st.selectbox('Cor:', list(df.columns)) 
+        cor = st.selectbox('Cor:', list(df.columns), index=3) 
 
     with statistics4_1:
-        # eixo_y = st.selectbox('Eixo y ANOVA:', colunas_numericas) 
         eixo_y = coluna 
-
-    st.markdown(f'É possível acreditar que os grupos dentro de {coluna} são distintos?')
 
     groups = df[eixo_x].unique()
     group_data = [df[df[eixo_x] == group][eixo_y] for group in groups]
@@ -247,10 +258,12 @@ with statistics4:
     plt.text(0.5, 0.96, subtitulo, ha='center', fontsize=8, transform=plt.gca().transAxes)
     st.pyplot(fig6, use_container_width=True, clear_figure=False)
 
+    st.markdown(f'É possível acreditar que os grupos dentro de {coluna} são distintos?')
+
     if p_value <= 0.05:
-        st.write(f'Sim, os grupos são distintos, com {confianca:.4f} de confiança.')  
+        st.write(f'R: Sim, os grupos são distintos, com {confianca:.4f} de confiança.')  
     else:
-        st.write('Não, os grupos não são distintos. Recomenda-se consolidar alguns grupos.')  
+        st.write('R: Não, os grupos não são distintos. Recomenda-se consolidar alguns grupos e/ou sintetizar dados.')  
 
 
 with statistics5:
